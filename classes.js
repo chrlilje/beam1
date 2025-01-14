@@ -34,19 +34,68 @@ class Beam {
    * This BeamsAB class define a beam going from point a to b
    */
 class BeamAB {
+  /**
+   * 
+   * @param {initdata.x1 } initdata - start x 
+   * @param {initdata.y1 } initdata - start y
+   * @param {initdata.x2 } initdata - end x
+   * @param {initdata.y2 } initdata - end y
+   */
     constructor(initdata){
-        this.x = initdata.x1;
-        this.y = initdata.y1;
-        this.h = initdata.h;
+        this.x1 = initdata.x1;
+        this.y1 = initdata.y1;
+        this.x2 = initdata.x2;
+        this.y2 = initdata.y2;
 
-
-        // We want to convert to an angle and a length
-        let beamLength = dist(initdata.x1, initdata.y1, initdata.x2, initdata.y2);
-        this.w = beamLength;
-
-
-
+        this.w = initdata.w;
+        this.color = initdata.color;
+        this.origin = initdata.origin;
     }
+
+    draw(){
+        push();
+        // First move to the origin
+        translate(this.origin.x, this.origin.y);
+        strokeWeight(this.w);
+        // Then move to the actual position
+        line(this.x1, this.y1, this.x2, this.y2);
+        pop();
+    }
+}
+
+class BeamOO {
+  constructor(initdata){
+    this.o1 = initdata.origin1;
+    this.o2 = initdata.origin2;
+    this.o3 = initdata.origin3;
+
+    this.w = initdata.w;
+    this.color = initdata.color;
+    this.fixedLength = initdata.length;
+  }
+
+  draw(){
+    push();
+    // First move to the origin
+    strokeWeight(this.w);
+    stroke(this.color);
+    // Calculate the direction vector
+    let dx = this.o2.x - this.o1.x;
+    let dy = this.o2.y - this.o1.y;
+    // Calculate the length of the line
+    let length = dist(this.o1.x, this.o1.y, this.o2.x, this.o2.y);
+    // Normalize the direction vector and extend it by the fixed length
+    let extendX = dx / length * this.fixedLength;
+    let extendY = dy / length * this.fixedLength;
+    // Calculate the third point
+    this.o3.x = this.o1.x + extendX;
+    this.o3.y = this.o1.y + extendY;
+
+    // Draw the lines
+    line(this.o1.x, this.o1.y, this.o2.x, this.o2.y);
+    line(this.o2.x, this.o2.y, this.o3.x, this.o3.y);
+
+  }
 }
 
 class ForceArrow {
